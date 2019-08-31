@@ -126,7 +126,11 @@ app.get('/api/logout', auth, (req, res) => {
     })
 })
 
-
+app.get('/api/auth', auth, (req, res) => {
+    res.json({
+        user: user
+    })
+})
 
 
 //UPDATE
