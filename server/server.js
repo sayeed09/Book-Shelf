@@ -92,7 +92,7 @@ app.get('/api/getReviewer', (req, res) => {
         res.json({
             success: true,
             name: user.name,
-            lastName: user.lastName
+            lastName: user.lastname
         })
     })
 })
