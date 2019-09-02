@@ -5,7 +5,7 @@ const config = {
     },
     default: {
         SECRET: "S2Yedkj%7",
-        DATABASE: "mongodb://localhost:27017/bookShelf"
+        DATABASE: "mongodb+srv://sayeed09:s786ayeed@cluster0-h8bc1.mongodb.net/bookShelf?retryWrites=true&w=majority"//"mongodb://localhost:27017/bookShelf"
     }
 }
 
