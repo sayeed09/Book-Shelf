@@ -6,7 +6,7 @@ const config = require('./config/config').get(process.env.NODE_ENV);
 const app = express();
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.DATABASE);
+mongoose.connect(config.DATABASE, { useNewUrlParser: true });
 
 const { User } = require('./models/user');
 const { Book } = require('./models/book');
@@ -166,8 +166,8 @@ app.delete('/api/delete_book', (req, res) => {
 
 if (process.env.NODE_ENV == "production") {
     const path = require('path');
-    app.get('/*', (req,res) => {
-        res.sendfile(path.resolve(__dirname,'../client','build','index.html'));
+    app.get('/*', (req, res) => {
+        res.sendfile(path.resolve(__dirname, '../client', 'build', 'index.html'));
     })
 }
 
