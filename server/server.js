@@ -15,7 +15,7 @@ const { auth } = require('./middleware/auth');
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const Port = process.env.Port || 3001;
+app.use(express.static('client/build'));
 
 // POST
 app.post('/api/book', (req, res) => {
@@ -43,22 +43,25 @@ app.post('/api/register', (req, res) => {
 })
 
 app.post('/api/login', (req, res) => {
-
     User.findOne({ 'email': req.body.email }, (err, user) => {
-        if (!user) return res.status(200).json({ isAuth: false, Message: "User not Found!" });
+        if (!user) return res.json({ isAuth: false, message: 'Auth failed, email not found' })
 
         user.comparePassword(req.body.password, (err, isMatch) => {
-            if (!isMatch) return res.json({ isAuth: false, Message: "Wrong Password " })
-        });
-        user.generateToken((err, user) => {
-            if (err) return res.send(err)
-            res.cookie('auth', user.token).json({
-                isAuth: true,
-                id: user._id,
-                email: user.email
+            if (!isMatch) return res.json({
+                isAuth: false,
+                message: 'Wrong password'
+            });
+
+            user.generateToken((err, user) => {
+                if (err) return res.status(400).send(err);
+                res.cookie('auth', user.token).json({
+                    isAuth: true,
+                    id: user._id,
+                    email: user.email
+                })
             })
         })
-    });
+    })
 })
 
 
@@ -128,7 +131,8 @@ app.get('/api/logout', auth, (req, res) => {
 
 app.get('/api/auth', auth, (req, res) => {
     res.json({
-        user: user
+        isAuth: true,
+        user: req.user
     })
 })
 
@@ -160,7 +164,14 @@ app.delete('/api/delete_book', (req, res) => {
     })
 })
 
+if (process.env.NODE_ENV == "production") {
+    const path = require('path');
+    app.get('/*', (req,res) => {
+        res.sendfile(path.resolve(__dirname,'../client','build','index.html'));
+    })
+}
 
+const Port = process.env.Port || 3001;
 
 app.listen(Port, () => {
     console.log("SERVER IS RUNNING");

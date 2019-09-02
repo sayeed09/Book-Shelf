@@ -7,7 +7,7 @@ class BookView extends Component {
         this.props.dispatch(getBookWithReviewer(this.props.match.params.id));
     }
     componentWillUnmount() {
-        this.props.dispatch(clearBookWithReviewer())
+        this.props.dispatch(clearBookWithReviewer());
     }
     renderBook = (books) => (
         books.book ?
